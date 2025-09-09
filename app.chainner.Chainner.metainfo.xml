@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>app.chainner.Chainner</id>
+  <name>Chainner</name>
+  <project_license>AGPL-3.0-only OR GPL-3.0-only</project_license>
+  <developer_name>Chainner Team</developer_name>
+  <summary>Image processing gui</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <url type="homepage">https://chainner.app/</url>
+  <url type="help">https://github.com/chaiNNer-org/chaiNNer/issues</url>
+  <url type="translate">https://github.com/chaiNNer-org/chaiNNer</url>
+  <url type="vcs-browser">https://github.com/chaiNNer-org/chaiNNer</url>
+  <launchable type="desktop-id">im.riot.Riot.desktop</launchable>
+  <description>
+    <p>A node-based image processing GUI aimed at making chaining image processing tasks easy and customizable. Born as an AI upscaling application, chaiNNer has grown into an extremely flexible and powerful programmatic image processing application.</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Element logged-in frontend</caption>
+      <image type="source">https://user-images.githubusercontent.com/2221064/137519256-655fe0f9-55f0-44a4-b681-83711654fff0.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.11.110" date="2025-08-27">
+      <description></description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1">
+  </content_rating>
+  <branding>
+    <color type="primary" scheme_preference="light">#71d7ae</color>
+    <color type="primary" scheme_preference="dark">#004832</color>
+  </branding>
+</component>

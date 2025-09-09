@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Chainner
+Comment=Image processing gui
+Icon=app.chainner.Chainner
+Exec=chainner
+Keywords=image;processing;ai;

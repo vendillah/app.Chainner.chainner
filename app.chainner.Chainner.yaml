@@ -1,0 +1,79 @@
+app-id: app.chainner.Chainner
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+base: org.electronjs.Electron2.BaseApp
+base-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: chainner
+separate-locales: false
+finish-args:
+  # Version required to use the document-portal v4
+  - --require-version=1.7.0
+  # Required due to being a GUI application
+  - --socket=x11
+  # Required to make sure x11 performance is achived on all platforms
+  # At least that's what the legends tell. it might be worth experimenting
+  # with dropping this permission.
+  - --share=ipc
+  # Required for experimental wayland support
+  - --socket=wayland
+  # Required to provide Call functionality
+  - --socket=pulseaudio
+  - --device=all
+  # As a chat application, networking is required
+  - --share=network
+  # Required for notifications in various desktop environments
+  - --talk-name=org.kde.StatusNotifierWatcher
+  # Required to allow screensaver/idle inhibition such as during video calls
+  - --talk-name=org.freedesktop.ScreenSaver
+  # Required to store access tokens (persistent logins)
+  - --filesystem=xdg-run/keyring
+  # Required for experimental wayland support
+  - --filesystem=xdg-run/pipewire-0
+  - --filesystem=xdg-data/app.chainner.Chainner
+  - --filesystem=xdg-config/app.chainner.Chainner
+  - --filesystem=home/.local/share/app.chainner.Chainner
+  # For correct cursor scaling under Wayland
+  - --env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
+  # Required to use the UnityLauncherAPI
+  - --talk-name=com.canonical.Unity
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /lib/*.la
+  - /lib/*.a
+  - /share/pkgconfig
+  - /share/aclocal
+  - /share/gtk-doc
+  - /share/doc
+  - /share/info
+  - /share/man
+  - /man
+modules:
+  - name: chainner
+    buildsystem: simple
+    build-commands:
+      - install chainner.sh /app/bin/chainner
+      - install -Dm644 app.chainner.Chainner.desktop /app/share/applications/app.chainner.Chainner.desktop
+      - install -Dm644 app.chainner.Chainner.metainfo.xml /app/share/metainfo/app.chainner.Chainner.metainfo.xml
+      # - rm chainner.sh app.chainner.Chainner.desktop app.chainner.Chainner.metainfo.xml
+      - install -Dm644 ElementLogomark.svg /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg # just a placeholder, a logo can be found in the archive:/chaiNNer-linux-x64/resources/app/.vite/renderer/main_window/
+      - mkdir /app/Chainner
+      - cp -r * /app/Chainner
+      - chmod -R a-s,go+rX,go-w "/app/Chainner"
+      # - patch-desktop-filename ${FLATPAK_DEST}/Chainner/resources/app.asar
+      
+    sources:
+      - type: archive
+        only-arches:
+          - x86_64
+        url: https://github.com/chaiNNer-org/chaiNNer/releases/download/v0.24.1/chaiNNer-linux-x64-0.24.1.zip
+        sha256: 5b04e426d37c2b7077f577cb1c9067d1a90653cc1caf8768943331f4c7a47ac1
+      - type: file
+        path: chainner.sh
+      - type: file
+        path: app.chainner.Chainner.metainfo.xml
+      - type: file
+        path: app.chainner.Chainner.desktop
+      - type: file
+        path: ElementLogomark.svg
