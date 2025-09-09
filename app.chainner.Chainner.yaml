@@ -1,43 +1,31 @@
-app-id: app.chainner.Chainner
+app-id: app.chainner.Chainner # reverse id convention
 runtime: org.freedesktop.Platform
-runtime-version: '24.08'
-base: org.electronjs.Electron2.BaseApp
+runtime-version: '24.08' # might have a newer version, didn't bother
+base: org.electronjs.Electron2.BaseApp # the most basic base for an Electron app, provides npm and yarn support, so a full build is also possible
 base-version: '24.08'
 sdk: org.freedesktop.Sdk
-command: chainner
+command: chainner # the command that will be called once you run it (see also .desktop file), this executable will be placed below
 separate-locales: false
 finish-args:
-  # Version required to use the document-portal v4
+  # all these settings are copied over from Element -- too many permissions can't harm when you're just trying to get the app to run for the first time
   - --require-version=1.7.0
-  # Required due to being a GUI application
   - --socket=x11
-  # Required to make sure x11 performance is achived on all platforms
-  # At least that's what the legends tell. it might be worth experimenting
-  # with dropping this permission.
   - --share=ipc
-  # Required for experimental wayland support
   - --socket=wayland
-  # Required to provide Call functionality
   - --socket=pulseaudio
   - --device=all
-  # As a chat application, networking is required
   - --share=network
-  # Required for notifications in various desktop environments
   - --talk-name=org.kde.StatusNotifierWatcher
-  # Required to allow screensaver/idle inhibition such as during video calls
   - --talk-name=org.freedesktop.ScreenSaver
-  # Required to store access tokens (persistent logins)
   - --filesystem=xdg-run/keyring
-  # Required for experimental wayland support
   - --filesystem=xdg-run/pipewire-0
   - --filesystem=xdg-data/app.chainner.Chainner
   - --filesystem=xdg-config/app.chainner.Chainner
   - --filesystem=home/.local/share/app.chainner.Chainner
-  # For correct cursor scaling under Wayland
   - --env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons
-  # Required to use the UnityLauncherAPI
   - --talk-name=com.canonical.Unity
 cleanup:
+  # just borrowed, didn't look into this 
   - /include
   - /lib/pkgconfig
   - /lib/*.la
@@ -50,30 +38,30 @@ cleanup:
   - /share/man
   - /man
 modules:
-  - name: chainner
+  - name: chainner # the name of the module that will be created in ./.flatpak-builder/build by running the build tool
     buildsystem: simple
     build-commands:
-      - install chainner.sh /app/bin/chainner
-      - install -Dm644 app.chainner.Chainner.desktop /app/share/applications/app.chainner.Chainner.desktop
-      - install -Dm644 app.chainner.Chainner.metainfo.xml /app/share/metainfo/app.chainner.Chainner.metainfo.xml
-      # - rm chainner.sh app.chainner.Chainner.desktop app.chainner.Chainner.metainfo.xml
+      - install chainner.sh /app/bin/chainner # ensure a binary can be exported; this is just moving chainner.sh, which will be called
+      - install -Dm644 app.chainner.Chainner.desktop /app/share/applications/app.chainner.Chainner.desktop # no clue why this is necessary, but it is
+      - install -Dm644 app.chainner.Chainner.metainfo.xml /app/share/metainfo/app.chainner.Chainner.metainfo.xml # no clue why this is necessary, but it is
+      # - rm chainner.sh app.chainner.Chainner.desktop app.chainner.Chainner.metainfo.xml # no clue why Element did this
       - install -Dm644 ElementLogomark.svg /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg # just a placeholder, a logo can be found in the archive:/chaiNNer-linux-x64/resources/app/.vite/renderer/main_window/
-      - mkdir /app/Chainner
-      - cp -r * /app/Chainner
-      - chmod -R a-s,go+rX,go-w "/app/Chainner"
+      - mkdir /app/Chainner # no clue why, might have been a Electron specific thing Element was trying to fix -- doesn't work enabled or disabled
+      - cp -r * /app/Chainner # ^
+      - chmod -R a-s,go+rX,go-w "/app/Chainner" # changing permissions -- no clue why
       # - patch-desktop-filename ${FLATPAK_DEST}/Chainner/resources/app.asar
       
     sources:
-      - type: archive
+      - type: archive # specify that flatpak should automatically extract this archive
         only-arches:
-          - x86_64
+          - x86_64 # specify it only works for x86_64 (as the source specifically has "x64" in its name)
         url: https://github.com/chaiNNer-org/chaiNNer/releases/download/v0.24.1/chaiNNer-linux-x64-0.24.1.zip
-        sha256: 5b04e426d37c2b7077f577cb1c9067d1a90653cc1caf8768943331f4c7a47ac1
+        sha256: 5b04e426d37c2b7077f577cb1c9067d1a90653cc1caf8768943331f4c7a47ac1 # generated with `sha256sum file.zip`
       - type: file
-        path: chainner.sh
+        path: chainner.sh # copied over from Element, stripped FLAGS logic
       - type: file
-        path: app.chainner.Chainner.metainfo.xml
+        path: app.chainner.Chainner.metainfo.xml # specified as it will later be moved
       - type: file
-        path: app.chainner.Chainner.desktop
+        path: app.chainner.Chainner.desktop # specified as it will later be moved
       - type: file
-        path: ElementLogomark.svg
+        path: ElementLogomark.svg # the app icon -- not necessary to provide with apps, but was just in the Element flatpak, so left it there for ease
